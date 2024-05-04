@@ -22,15 +22,17 @@ ww_test_data <- white_wine[-ww_idxs, ]
 model_red <- lm(quality ~ ., data = rw_train_data)
 model_white <- lm(quality ~ ., data = ww_train_data)
 
-print(summary(model_white))
-print(summary(model_red))
 red_yhat = predict(model_red, newdata=rw_test_data)
 red_err = mean((red_yhat - red_wine[-rw_idxs, "quality"])^2)
-red_err
 
 white_yhat = predict(model_white, newdata=ww_test_data)
 white_err = mean((white_yhat - white_wine[-ww_idxs, "quality"])^2)
-white_err
+
+print(summary(model_red))
+print(paste("Red Wine Lin Reg Test MSE:", red_err))
+
+print(summary(model_white))
+print(paste("White Wine Lin Reg Test MSE:", white_err))
 
 # run regression trees
 install.packages("tree")
