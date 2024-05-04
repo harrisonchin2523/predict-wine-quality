@@ -8,6 +8,9 @@ white_wine <- read.csv("./wine+quality/winequality-white.csv", header = TRUE, se
 # str(red_wine)
 wine_data <- rbind(red_wine, white_wine)
 
+red_wine <- na.omit(red_wine[red_wine$quality != "NA", ])
+white_wine <- na.omit(white_wine[white_wine$quality != "NA", ])
+
 # baseline regression model
 set.seed(1)  # for reproducibility
 rw_idxs <- sample(seq_len(nrow(red_wine)), size = 0.8 * nrow(red_wine))
@@ -33,6 +36,35 @@ print(paste("Red Wine Lin Reg Test MSE:", red_err))
 
 print(summary(model_white))
 print(paste("White Wine Lin Reg Test MSE:", white_err))
+
+# install.packages("ggplot2")
+# library(ggplot2)
+
+ww_test_data$predicted_quality = predict(model_white, newdata = ww_test_data)
+
+
+rw_test_data$predicted_quality = predict(model_red, newdata = rw_test_data)
+
+ggplot(rw_test_data, aes(x = predicted_quality, y = quality)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", col = "red") +
+  ggtitle("Predicted vs Actual Quality: Red Wine") +
+  xlab("Predicted Quality") +
+  ylab("Actual Quality") +
+  theme_minimal() +
+  theme(aspect.ratio = (1 / 1), 
+        axis.title = element_text(size = 15),  
+        axis.text = element_text(size = 13), 
+        plot.title = element_text(size = 16, hjust = 0.5))
+
+# ggplot(ww_test_data, aes(x = predicted_quality, y = quality)) +
+#   geom_point(alpha = 0.5) +
+#   geom_smooth(method = "lm", col = "blue") +
+#   ggtitle("Predicted vs Actual Quality: White Wine") +
+#   xlab("Predicted Quality") +
+#   ylab("Actual Quality") +
+#   theme_minimal()
+
 
 # run regression trees
 # install.packages("tree")
